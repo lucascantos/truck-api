@@ -52,8 +52,8 @@ resources:
 
 
 functions:
-  users_info:
-    handler: handler.hello
+  get_users:
+    handler: handler.get_users
     events:
       - http:
           path: users/
@@ -61,19 +61,24 @@ functions:
           request:
           parameters:
             queryParams:
-            - name: "latitude"
-              description: "Latitude"
-              required: true
+            - name: "gender"
+              description: "Gender"
+            - name: "ownVehicle"
+              description: "The owner of this vehicle is the user?"
+            - name: "licence"
+              description: "Driver Licence (CNH) Category"
+            - name: "vehicleType"
+              description: "The type of vehicle"
 
-  new_user:
-    handler: handler.hello
+  add_user:
+    handler: handler.add_user
     events:
       - http:
           path: users/
           method: post
 
-  user_info:
-    handler: handler.hello
+  get_user_info:
+    handler: handler.get_user_info
     events:
       - http:
           path: users/{id}
@@ -83,19 +88,19 @@ functions:
               paths: 
                 id: true
 
-  user_update:
-    handler: handler.hello
+  update_user_info:
+    handler: handler.update_user_info
     events:
       - http:
           path: users/{id}
-          method: post
+          method: put
           request: 
             parameters: 
               paths: 
                 id: true
 
-  terminal_list:
-    handler: handler.hello
+  get_terminal:
+    handler: handler.get_terminal
     events:
       - http:
           path: terminals/{id}

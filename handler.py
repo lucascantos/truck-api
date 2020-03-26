@@ -1,6 +1,59 @@
 import json
 from src.helpers.verify import check_param
 
+def get_users(event=None, context=None):
+    '''
+    Get filter parameters
+    load users on pandas
+    check filters with headers (continue)
+    filter data
+    return json of data
+    200
+    '''
+    pass
+
+def add_user(event=None, context=None):
+    '''
+    Check if parameters are right [name, age, gender, ownAuto, licence, vehicleType] 400
+    Load users on pandas
+    Include data do table
+    Save users back to s3
+    201
+    '''
+
+    pass
+
+def get_user_info(event=None, context=None):
+    '''
+    load users on pandas
+    check if user exists 404
+    get user data
+    return json of data
+    200
+    '''
+    pass
+
+def update_user_info(event=None, context=None):
+    '''
+    check if body is present 400
+    load users on pandas
+    check if user exists 404
+    get user data
+    change user data
+    save data back to s3
+    200
+    '''
+    pass
+
+def get_terminal(event=None, context=None):
+    '''
+    load terminals on pandas
+    check if terminal exists 404
+    get terminal data
+    return json of data
+    200
+    '''
+    pass
 
 def hello(event, context):
     body = {
