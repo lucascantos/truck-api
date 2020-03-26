@@ -17,13 +17,10 @@ def signed_s3_file(filepath):
     response = s3_client.generate_presigned_url('get_object',Params={'Bucket': BUCKETNAME,'Key': filepath}, ExpiresIn=604800)
     return response
 
-def s3_upload(data, product_name, buffer=False):
+def s3_upload(data, filepath):
     ''' Faz upload de arquivo para o buket s3 '''
-    filename = datetime.utcnow().strftime("{}_%Y%m%d".format(product_name))
-    if buffer:
-        filepath = f"{product_name}/buffer.json"
-    else:
-        filepath = f"{product_name}/{data_lake_name()}/{filename}.json"
+    # filename = datetime.utcnow().strftime("{}_%Y%m%d".format(product_name))
+    # filepath = f"{product_name}/{data_lake_name()}/{filename}.json"
 
     s3 = boto3.client('s3')
     s3.put_object(Bucket=BUCKETNAME, Key=filepath, Body=json.dumps(data))

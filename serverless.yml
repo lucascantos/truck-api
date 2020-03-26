@@ -17,10 +17,8 @@ provider:
         - s3:PutObject
         - s3:HeadObject
       Resource: 
-        - "arn:aws:s3:::${self:custom.USER_DB}"
-        - "arn:aws:s3:::${self:custom.USER_DB}/*"
-        - "arn:aws:s3:::${self:custom.TERMINAL_DB}"
-        - "arn:aws:s3:::${self:custom.TERMINAL_DB}/*"
+        - "arn:aws:s3:::${self:custom.S3_BUCKET}"
+        - "arn:aws:s3:::${self:custom.S3_BUCKET}/*"
 
 # you can add packaging information here
 
@@ -33,8 +31,8 @@ custom:
     path: .env
   pythonRequirements:
     dockerizePip: non-linux
-  USER_DB: ${env:S3_BUCKET}-${self:provider.stage}-users
-  TERMINAL_DB: ${env:S3_BUCKET}-${self:provider.stage}-terminals
+  S3_BUCKET: ${env:S3_BUCKET}-${self:provider.stage}
+  # TERMINAL_DB: ${env:S3_BUCKET}-${self:provider.stage}-terminals
 
 # you can add CloudFormation resource templates here
 resources:
@@ -42,14 +40,8 @@ resources:
     UserDB:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:custom.USER_DB}
+        BucketName: ${self:custom.S3_BUCKET}
         AccessControl:  Private
-    TerminalDB:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.TERMINAL_DB}
-        AccessControl:  Private
-
 
 functions:
   get_users:

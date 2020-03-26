@@ -1,5 +1,7 @@
 import json
+import pandas as pd
 from src.helpers.verify import check_param
+from src.helpers import s3
 
 def get_users(event=None, context=None):
     '''
@@ -13,6 +15,16 @@ def get_users(event=None, context=None):
     pass
 
 def add_user(event=None, context=None):
+    user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
+
+    if error := check_param(event['body'], user_params):
+        return make_response(error[0], error[1])  
+          
+    new_user_params = json.loads(event['body'])
+
+    users_data = s3.s3_download('users/user_list.json')
+    users_df = pd.DataFrame(users_data)
+
     '''
     Check if parameters are right [name, age, gender, ownAuto, licence, vehicleType] 400
     Load users on pandas
@@ -20,7 +32,6 @@ def add_user(event=None, context=None):
     Save users back to s3
     201
     '''
-
     pass
 
 def get_user_info(event=None, context=None):
@@ -55,6 +66,19 @@ def get_terminal(event=None, context=None):
     '''
     pass
 
+def make_response(code, body):
+    response = {
+        "statusCode": code,
+        "body": json.dumps(body)
+    }
+    return response
+
+def initial_files():
+    '''
+    Create User list file(Right format and metadata)
+    Create Terminal list file
+    '''
+    pass
 def hello(event, context):
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
