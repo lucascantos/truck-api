@@ -1,0 +1,100 @@
+service: truck-api
+
+provider:
+  name: aws
+  runtime: python3.8
+
+ stage: dev
+ region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+ iamRoleStatements:
+   - Effect: "Allow"
+     Action:
+       - "s3:ListBucket"
+     Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+   - Effect: "Allow"
+     Action:
+       - "s3:PutObject"
+     Resource:
+       Fn::Join:
+         - ""
+         - - "arn:aws:s3:::"
+           - "Ref" : "ServerlessDeploymentBucket"
+           - "/*"
+
+
+# you can add packaging information here
+package:
+ include:
+   - include-me.py
+   - include-me-dir/**
+ exclude:
+   - exclude-me.py
+   - exclude-me-dir/**
+
+functions:
+
+  users_info:
+    handler: handler.hello
+    events:
+      - http:
+          path: users/
+          method: get
+          request:
+          parameters:
+            queryParams:
+            - name: "latitude"
+              description: "Latitude"
+              required: true
+
+  new_user:
+      handler: handler.hello
+      events:
+        - http:
+            path: users/
+            method: post
+
+  user_info:
+    handler: handler.hello
+    events:
+      - http:
+          path: users/{id}
+          method: get
+          request: 
+            parameters: 
+              paths: 
+                id: true
+
+  user_update:
+  handler: handler.hello
+    events:
+      - http:
+          path: users/{id}
+          method: post
+          request: 
+            parameters: 
+              paths: 
+                id: true
+
+
+  terminal_list:
+  handler: handler.hello
+    events:
+      - http:
+          path: terminals/{id}
+          method: get
+          request: 
+            parameters: 
+              paths: 
+                id: true
+  
+  
+
+# you can add CloudFormation resource templates here
+resources:
+ Resources:
+   NewResource:
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: my-new-bucket
