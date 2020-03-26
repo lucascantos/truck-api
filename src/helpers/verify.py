@@ -10,13 +10,9 @@ def check_file(file_url):
     return buffer_data
 
 def check_param(event, required_params):
-    response = None
-    if not event['queryStringParameters']:
-        response = "No query parameters given"
-
-    for param in required_params:            
-        if not param in event['queryStringParameters']:
-            response = f"{param} parameter not found"
+    response = None           
+    if not required_params in event:
+        response = f"{required_params} parameter not found"
 
     if response:
         return (400, response)

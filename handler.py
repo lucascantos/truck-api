@@ -5,6 +5,14 @@ from src.helpers.verify import check_param
 from src.helpers import s3
 
 def get_users(event=None, context=None):
+
+    users_db = user_list()
+    body = users_db.users_data
+    if check_param(event, 'queryStringParameters'):
+        filter_params = event['queryStringParameters']
+        body = users_db.filter_users(filter_params)
+    make_response(200, body)
+
     '''
     Get filter parameters
     load users on pandas
@@ -18,13 +26,18 @@ def get_users(event=None, context=None):
 def add_user(event=None, context=None):
     user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
 
-    if error := check_param(event['body'], user_params):
-        return make_response(error[0], error[1])  
+    for param in user_params:        
+        if error := check_param(event['body'], param):
+            return make_response(error[0], error[1])  
           
     new_user_params = json.loads(event['body'])
+    new_user_params['status'] = 0
 
-    users_data = s3.s3_download('users/user_list.json')
-    users_df = pd.DataFrame(users_data)
+    users_db = user_list()
+    users_db.add_user(new_user_params)
+    users_db.save_users()
+
+    return make_response(201, f'New user added: {new_user_params["name"]}')
 
     '''
     Check if parameters are right [name, age, gender, ownAuto, licence, vehicleType] 400
@@ -80,24 +93,28 @@ if __name__ == "__main__":
         'name': [1,2,3],
         'age': [3,2,1]
     }
-    new_guy={
-        'name': 9,
-        'age': 0
-    }
     x = pd.DataFrame(new_users)
-    x = x.append(new_guy, ignore_index=True)
-    print(x)
-    filters = {
-        'name': 2,
-        'age': 2
-    }
-    y = x
-    for k, v in filters.items():
-        f = y[k]>=v
-        y = y[f]
-        print(y)
+
+    print(x.to_dict(orient='list'))
+
+    # new_guy={
+    #     'name': 9,
+    #     'age': 0
+    # }
+    # x = x.append(new_guy, ignore_index=True)
+    # print(x)
+    # filters = {
+    #     'name': 2,
+    #     'age': 2
+    # }
+    # y = x
+    # for k, v in filters.items():
+    #     f = y[k]>=v
+    #     y = y[f]
+    #     print(y)
     
-    print(x)
+    # print(json.loads(x))
+
     # x = user_list()
     # print(x.users_data)
     # x.save_users()
