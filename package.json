@@ -1,0 +1,24 @@
+{
+  "name": "truck-api",
+  "version": "1.0.0",
+  "description": "# Installation This requires a AWS account",
+  "dependencies": {
+    "serverless-dotenv-plugin": "^2.3.2",
+    "serverless-python-requirements": "^5.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucascantos/truck-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucascantos/truck-api/issues"
+  },
+  "homepage": "https://github.com/lucascantos/truck-api#readme",
+  "main": "index.js"
+}
