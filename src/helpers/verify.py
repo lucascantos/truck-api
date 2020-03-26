@@ -5,6 +5,7 @@ def check_file(file_url):
     try:
         buffer_data = s3.s3_download(file_url)
     except:
+        print('Error')
         return None
     return buffer_data
 

@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 
 BUCKETNAME = f"{os.environ.get('S3_BUCKET')}-{os.environ.get('STAGE_NAME')}"
+BUCKETNAME = 'lucascantosbucket'
 
 def data_lake_name():
     ''' padronização de nomemclatura para o data lake de images e dados '''
@@ -31,6 +32,7 @@ def s3_download(filepath):
     s3_client = boto3.client('s3')
     obj = s3_client.get_object(Bucket=BUCKETNAME, Key=filepath)
     response = json.loads(obj['Body'].read())
+    print('Loaded from Bucket')
     return response
 
 def file_url(filepath):

@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+from src.user_objects import user_list
 from src.helpers.verify import check_param
 from src.helpers import s3
 
@@ -73,12 +74,35 @@ def make_response(code, body):
     }
     return response
 
-def initial_files():
-    '''
-    Create User list file(Right format and metadata)
-    Create Terminal list file
-    '''
+
+if __name__ == "__main__":
+    new_users = {
+        'name': [1,2,3],
+        'age': [3,2,1]
+    }
+    new_guy={
+        'name': 9,
+        'age': 0
+    }
+    x = pd.DataFrame(new_users)
+    x = x.append(new_guy, ignore_index=True)
+    print(x)
+    filters = {
+        'name': 2,
+        'age': 2
+    }
+    y = x
+    for k, v in filters.items():
+        f = y[k]>=v
+        y = y[f]
+        print(y)
+    
+    print(x)
+    # x = user_list()
+    # print(x.users_data)
+    # x.save_users()
     pass
+
 def hello(event, context):
     body = {
         "message": "Go Serverless v1.0! Your function executed successfully!",
