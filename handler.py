@@ -5,14 +5,6 @@ from src.helpers.verify import check_param
 from src.helpers import s3
 
 def get_users(event=None, context=None):
-
-    users_db = user_list()
-    body = users_db.users_data
-    if check_param(event, 'queryStringParameters'):
-        filter_params = event['queryStringParameters']
-        body = users_db.filter_users(filter_params)
-    make_response(200, body)
-
     '''
     Get filter parameters
     load users on pandas
@@ -21,10 +13,26 @@ def get_users(event=None, context=None):
     return json of data
     200
     '''
-    pass
+    users_db = user_list()
+    body = users_db.users_data
+    if check_param(event, 'queryStringParameters'):
+        filter_params = event['queryStringParameters']
+        body = users_db.filter_users(filter_params)
+    make_response(200, body)
+
 
 def add_user(event=None, context=None):
+    '''
+    Check if parameters are right [name, age, gender, ownAuto, licence, vehicleType] 400
+    Load users on pandas
+    Include data do table
+    Save users back to s3
+    201
+    '''
     user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
+
+    if error := check_param(event, 'body'):
+        return make_response(error[0], error[1])  
 
     for param in user_params:        
         if error := check_param(event['body'], param):
@@ -39,14 +47,6 @@ def add_user(event=None, context=None):
 
     return make_response(201, f'New user added: {new_user_params["name"]}')
 
-    '''
-    Check if parameters are right [name, age, gender, ownAuto, licence, vehicleType] 400
-    Load users on pandas
-    Include data do table
-    Save users back to s3
-    201
-    '''
-    pass
 
 def get_user_info(event=None, context=None):
     '''
@@ -56,11 +56,26 @@ def get_user_info(event=None, context=None):
     return json of data
     200
     '''
-    pass
+    if error := check_param(event['path'], 'id'):
+        return make_response(error[0], error[1])  
+    
+    user_id = event['path']['id']
+    users_db = user_list()
+    users_data  = users_db.users_data
+    if user_id > len(users_data[0]):
+        return make_response(404, 'User not found')
+
+    user_info={}
+    for key in users_data.keys():
+        user_info[key] = users_data[key][user_id]
+
+    return make_response(200, user_info)
+
 
 def update_user_info(event=None, context=None):
     '''
     check if body is present 400
+    check if id was given 400
     load users on pandas
     check if user exists 404
     get user data
@@ -68,7 +83,28 @@ def update_user_info(event=None, context=None):
     save data back to s3
     200
     '''
-    pass
+    user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
+
+    if error := check_param(event, 'body'):
+        return make_response(error[0], error[1])  
+
+    update_params = event['body']
+    if error := check_param(event['path'], 'id'):
+        return make_response(error[0], error[1])  
+
+    user_id = event['path']['id']
+    users_db = user_list()
+    users_data  = users_db.users_data
+    if user_id > len(users_data[0]):
+        return make_response(404, 'User not found')
+
+    for key in users_data.keys():
+        if key in update_params:
+            users_data[key][user_id] = update_params[key]
+
+    users_db.save_users()
+    return make_response(200, f'User updated: {users_data["name"][user_id]}')
+
 
 def get_terminal(event=None, context=None):
     '''

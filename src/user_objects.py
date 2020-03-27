@@ -17,7 +17,7 @@ class user_list(object):
                 ]}
         }
 
-        user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType', 'status']
+        user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
         for param in user_params:
             self.users_data['users'][param] = []
         self._load_users()
