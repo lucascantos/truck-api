@@ -59,8 +59,6 @@ functions:
               description: "The owner of this vehicle is the user?"
             - name: "licence"
               description: "Driver Licence (CNH) Category"
-            - name: "vehicleType"
-              description: "The type of vehicle"
 
   add_user:
     handler: handler.add_user
@@ -91,8 +89,8 @@ functions:
               paths: 
                 user_id: true
 
-  get_terminal:
-    handler: handler.get_terminal
+  get_terminal_info:
+    handler: handler.get_terminal_info
     events:
       - http:
           path: terminals/{terminal_id}
@@ -101,6 +99,9 @@ functions:
             parameters: 
               paths: 
                 terminal_id: true
+            queryParams:
+            - name: "groupByVehicle"
+              description: "The type of vehicle"
 
   get_terminal_users:
     handler: handler.get_terminal_users
@@ -112,3 +113,14 @@ functions:
             parameters: 
               paths: 
                 terminal_id: true
+            queryParams:
+            - name: "ini_date"
+              description: "Initial date"
+            - name: "end_date"
+              description: "Final date"
+            - name: "loaded"
+              description: "Is the truck loaded"
+            - name: "ownVehicle"
+              description: "Is the Vahicle owned by the user"
+            - name: "groupByVehicle"
+              description: "Group result by type of vehicle"

@@ -40,7 +40,7 @@ class user_list(object):
         masked_df = {}
         for key in self.users_data.keys():
             masked_df[key] = list(np.array(self.users_data[key])[id_list])
-        
+            
         return masked_df
 
     

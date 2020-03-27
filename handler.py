@@ -1,6 +1,7 @@
 import json
 from src.user_objects import user_list
-from src.helpers.verify import check_param
+from src.terminal_objects import terminal_traffic
+from src.helpers.verify import check_param, check_object, make_response
 from src.helpers import s3
 
 def get_users(event=None, context=None):
@@ -16,7 +17,7 @@ def get_users(event=None, context=None):
     body = users_db.users_data
     if check_param(event, 'queryStringParameters'):
         filter_params = event['queryStringParameters']
-        body = users_db.filter_users(filter_params)
+        body['users'] = users_db.filter_users(filter_params)
     make_response(200, body)
 
 
@@ -59,9 +60,10 @@ def get_user_info(event=None, context=None):
         return make_response(error[0], error[1])  
     
     user_id = event['path']['id']
-    users_db = user_list()
-    if user_id > len(users_db.users_data[0]):
-        return make_response(404, 'User not found')
+    users_db = user_list()    
+    if error := check_object(user_id, users_db.users_data):
+        return error
+        
     user_info = users_db.get_users(user_id)
 
     return make_response(200, user_info)
@@ -87,9 +89,10 @@ def update_user_info(event=None, context=None):
 
     user_id = event['path']['id']
     users_db = user_list()
-    users_data  = users_db.users_data
-    if user_id > len(users_data[0]):
-        return make_response(404, 'User not found')
+    users_data  = users_db.users_data    
+
+    if error := check_object(user_id, users_data):
+        return error
 
     for key in users_data.keys():
         if key in update_params:
@@ -99,7 +102,35 @@ def update_user_info(event=None, context=None):
     return make_response(200, f'User updated: {users_data["name"][user_id]}')
 
 
-def get_terminal(event=None, context=None):
+def get_terminal_info(event=None, context=None):
+    allowed_params = ['groupByVehicle']
+    if error := check_param(event['path'], 'id'):
+        return make_response(error[0], error[1])  
+    
+    if check_param(event, 'queryStringParameters'):
+        filter_params = event['queryStringParameters']
+        if not ('ini_date' or 'end_date'):
+            filter_params['ini_date'] = None
+            filter_params['end_date'] = None
+
+    terminal_id = event['path']['terminal_id']
+    # if error := check_object(user_id, terminal_list().terminal_id):
+    #     return error
+    if terminal_id != 0:
+        return make_response(404, 'Not Found')  
+        
+    traffic_db = terminal_traffic(terminal_id, filter_params['ini_date'], filter_params['end_date'])
+    filter_params.pop('ini_date')
+    filter_params.pop('end_date')
+
+    if len(filter_params) > 0:
+        if filter_params['groupByVehicle']:
+            body = traffic_db.group_data('vehicleType', traffic_db.terminal_data['meta']['vehicleType'])
+    else:
+        body = traffic_db.terminal_data
+
+    return make_response(200, body)  
+
     '''
     load terminals on pandas
     check if terminal exists 404
@@ -107,14 +138,10 @@ def get_terminal(event=None, context=None):
     return json of data
     200
     '''
+
+def get_terminal_users(event=None, context=None):
     pass
 
-def make_response(code, body):
-    response = {
-        "statusCode": code,
-        "body": json.dumps(body)
-    }
-    return response
 
 
 if __name__ == "__main__":
@@ -122,17 +149,31 @@ if __name__ == "__main__":
     import pandas as pd
     from datetime import datetime
     from dateutil.relativedelta import relativedelta
-    new_users = {
-        'name': [],
-        'age': [3,2,1]
+    x = {
+        'name': [1,2,3],
+        'age': [3,2,1],
+        'gender': [1,2,1]
     }
     y = {
         'name': [4,4],
         'age': [1,2],
 
     }
-    y = new_users['name'] + [9,1,2,3,4]
-    print(y)
+
+    '''
+    header:{
+        unique_value{
+
+        }
+    }
+    '''
+    df = pd.DataFrame(x)
+    headers = ['df.columns']
+    print(headers)
+    if isinstance(headers, (list, object)):
+        if headers in df.columns:
+            print('nice')
+    print(df[headers].to_dict(orient='list'))
 
     # print(x.to_dict(orient='list'))
     # y = np.array(x['name'])

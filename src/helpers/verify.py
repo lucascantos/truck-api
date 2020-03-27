@@ -1,5 +1,6 @@
 from datetime import datetime
 from src.helpers import s3
+import json
 
 def check_file(file_url):
     try:
@@ -17,3 +18,14 @@ def check_param(event, required_params):
     if response:
         return (400, response)
 
+def check_object(object_id, object_data):
+    if object_id > len(object_data[0]):
+        return make_response(404, 'Not found')
+    return
+
+def make_response(code, body):
+    response = {
+        "statusCode": code,
+        "body": json.dumps(body)
+    }
+    return response
