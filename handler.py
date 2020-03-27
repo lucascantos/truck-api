@@ -120,15 +120,23 @@ def make_response(code, body):
 if __name__ == "__main__":
     import numpy as np
     import pandas as pd
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
     new_users = {
-        'name': [1,2,3],
+        'name': [],
         'age': [3,2,1]
     }
-    x = pd.DataFrame(new_users)
+    y = {
+        'name': [4,4],
+        'age': [1,2],
 
-    print(x.to_dict(orient='list'))
-    y = np.array(x['name'])
-    print(y[[0,1]])
+    }
+    y = new_users['name'] + [9,1,2,3,4]
+    print(y)
+
+    # print(x.to_dict(orient='list'))
+    # y = np.array(x['name'])
+    # print(y[[0,1]])
     # new_guy={
     #     'name': 9,
     #     'age': 0

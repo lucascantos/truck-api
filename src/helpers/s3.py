@@ -9,8 +9,8 @@ BUCKETNAME = 'lucascantosbucket'
 def data_lake_name(timestamp=None):
     ''' padronização de nomemclatura para o data lake de images e dados '''
     if not timestamp:
-        today = datetime.today()
-    folder = today.strftime('%Y/%m/')
+        timestamp = datetime.today()
+    folder = timestamp.strftime('%Y/%m')
     return folder
 
 def signed_s3_file(filepath):

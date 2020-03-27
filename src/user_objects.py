@@ -7,29 +7,21 @@ class user_list(object):
     def __init__(self):
         self.users_data = {
             'users': {},
-            'meta': {
-                'vehicleType':[
-                    'No Truck',
-                    'Caminhão 3/4',
-                    'Caminhão Toco',
-                    'Caminhão Truck',
-                    'Caminhão Simples',
-                    'Carreta Eixo',
-                ]}
+            'meta': {}
         }
 
-        user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
+        user_params = ['name', 'age', 'gender', 'ownAuto', 'licence']
         for param in user_params:
             self.users_data['users'][param] = []
         self._load_users()
+        self.users_df = pd.DataFrame(self.users_data['users'])
 
     def _load_users(self):
         if (data := check_file('users/user_list.json')):
-            self.users_data = data        
-        self.users_df = pd.DataFrame(self.users_data['users'])
+            self.users_data['users'] = data
 
     def save_users(self):
-        s3.s3_upload(self.users_data, 'users/user_list.json')
+        s3.s3_upload(self.users_data['users'], 'users/user_list.json')
 
     def add_user(self, new_user):
          self.users_df = self.users_df.append(new_user, ignore_index=True)
