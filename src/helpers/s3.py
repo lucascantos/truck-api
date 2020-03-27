@@ -6,11 +6,12 @@ from datetime import datetime
 BUCKETNAME = f"{os.environ.get('S3_BUCKET')}-{os.environ.get('STAGE_NAME')}"
 BUCKETNAME = 'lucascantosbucket'
 
-def data_lake_name():
+def data_lake_name(timestamp=None):
     ''' padronização de nomemclatura para o data lake de images e dados '''
-    today = datetime.today()
-    today_folder = today.strftime('%Y/%m/%d')
-    return today_folder
+    if not timestamp:
+        today = datetime.today()
+    folder = today.strftime('%Y/%m/')
+    return folder
 
 def signed_s3_file(filepath):
     ''' cria uma url com assinatura de acesso temporario para um arquivo do bucket s3 '''

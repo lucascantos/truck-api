@@ -73,31 +73,42 @@ functions:
     handler: handler.get_user_info
     events:
       - http:
-          path: users/{id}
+          path: users/{user_id}
           method: get
           request: 
             parameters: 
               paths: 
-                id: true
+                user_id: true
 
   update_user_info:
     handler: handler.update_user_info
     events:
       - http:
-          path: users/{id}
+          path: users/{user_id}
           method: put
           request: 
             parameters: 
               paths: 
-                id: true
+                user_id: true
 
   get_terminal:
     handler: handler.get_terminal
     events:
       - http:
-          path: terminals/{id}
+          path: terminals/{terminal_id}
           method: get
           request: 
             parameters: 
               paths: 
-                id: true
+                terminal_id: true
+
+  get_terminal_users:
+    handler: handler.get_terminal_users
+    events:
+      - http:
+          path: terminals/{terminal_id}/users
+          method: get
+          request: 
+            parameters: 
+              paths: 
+                terminal_id: true

@@ -1,5 +1,4 @@
 import json
-import pandas as pd
 from src.user_objects import user_list
 from src.helpers.verify import check_param
 from src.helpers import s3
@@ -61,13 +60,9 @@ def get_user_info(event=None, context=None):
     
     user_id = event['path']['id']
     users_db = user_list()
-    users_data  = users_db.users_data
-    if user_id > len(users_data[0]):
+    if user_id > len(users_db.users_data[0]):
         return make_response(404, 'User not found')
-
-    user_info={}
-    for key in users_data.keys():
-        user_info[key] = users_data[key][user_id]
+    user_info = users_db.get_users(user_id)
 
     return make_response(200, user_info)
 
@@ -83,8 +78,6 @@ def update_user_info(event=None, context=None):
     save data back to s3
     200
     '''
-    user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
-
     if error := check_param(event, 'body'):
         return make_response(error[0], error[1])  
 
@@ -125,6 +118,8 @@ def make_response(code, body):
 
 
 if __name__ == "__main__":
+    import numpy as np
+    import pandas as pd
     new_users = {
         'name': [1,2,3],
         'age': [3,2,1]
@@ -132,7 +127,8 @@ if __name__ == "__main__":
     x = pd.DataFrame(new_users)
 
     print(x.to_dict(orient='list'))
-
+    y = np.array(x['name'])
+    print(y[[0,1]])
     # new_guy={
     #     'name': 9,
     #     'age': 0

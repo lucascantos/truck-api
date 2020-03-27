@@ -1,6 +1,7 @@
 from src.helpers import s3
 from src.helpers.verify import check_file
 import pandas as pd
+import numpy as np
 
 class user_list(object):
     def __init__(self):
@@ -34,12 +35,21 @@ class user_list(object):
          self.users_df = self.users_df.append(new_user, ignore_index=True)
          self.users_data['users'] = self.users_df.to_dict(orient='list')
     
-    def filter_users(self, masks):
+    def filter_users(self, mask_dict):
         filtered_df = self.users_df
-        for key, value in masks.items():
+        for key, value in mask_dict.items():
             mask = self.users_df[key == value]
             masked_df = filtered_df[mask]
             if masked_df.size==0:
                 break
         return masked_df.to_dict(orient='list')
+    
+    def get_users(self, id_list):
+        masked_df = {}
+        for key in self.users_data.keys():
+            masked_df[key] = list(np.array(self.users_data[key])[id_list])
+        
+        return masked_df
+
+    
             
