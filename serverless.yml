@@ -47,9 +47,9 @@ functions:
   get_users:
     handler: handler.get_users
     events:
-      - http:
-          path: users/
-          method: get
+      - httpApi:
+          path: users
+          method: GET
           request:
             queryParams:
             - name: "gender"
@@ -62,30 +62,30 @@ functions:
   add_user:
     handler: handler.add_user
     events:
-      - http:
-          path: users/
-          method: post
+      - httpApi:
+          path: users
+          method: POST
 
   get_user_info:
     handler: handler.get_user_info
     events:
-      - http:
+      - httpApi:
           path: users/{user_id}
-          method: get
+          method: GET
 
   update_user_info:
     handler: handler.update_user_info
     events:
-      - http:
+      - httpApi:
           path: users/{user_id}
-          method: put
+          method: PUT
 
   get_terminal_info:
     handler: handler.get_terminal_info
     events:
-      - http:
+      - httpApi:
           path: terminals/{terminal_id}
-          method: get
+          method: GET
           request: 
             queryParams:
             - name: "ini_date"
@@ -100,14 +100,14 @@ functions:
   add_terminal_traffic:
     handler: handler.add_terminal_traffic
     events:
-      - http:
+      - httpApi:
           path: terminals/{terminal_id}
-          method: post
+          method: POST
 
   get_terminal_users:
     handler: handler.get_terminal_users
     events:
-      - http:
+      - httpApi:
           path: terminals/{terminal_id}/users
           method: get
           request: 

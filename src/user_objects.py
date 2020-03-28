@@ -30,12 +30,13 @@ class user_list(object):
     def filter_users(self, mask_dict, headers=None):
         filtered_df = self.users_df
         for key, value in mask_dict.items():
-            mask = self.users_df[key == value]
+            mask = self.users_df[key]==value
             masked_df = filtered_df[mask]
             if masked_df.size==0:
                 break
         if not isinstance(headers, [list, object]):
             headers = masked_df.columns
+        print(masked_df)
         return masked_df[headers].to_dict(orient='list')
     
     def get_users(self, id_list):

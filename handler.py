@@ -15,8 +15,10 @@ def get_users(event=None, context=None):
     '''
     users_db = user_list()
     body = users_db.users_data
-    if check_param(event, 'queryStringParameters'):
+    print(event)
+    if not check_param(event, 'queryStringParameters'):
         filter_params = event['queryStringParameters']
+        print(filter_params)
         body['users'] = users_db.filter_users(filter_params)
     return make_response(200, body)
 
@@ -56,10 +58,11 @@ def get_user_info(event=None, context=None):
     return json of data
     200
     '''
-    if error := check_param(event['path'], 'id'):
+    print(event)
+    if error := check_param(event['path'], 'user_id'):
         return make_response(error[0], error[1])  
     
-    user_id = event['path']['id']
+    user_id = event['path']['user_id']
     users_db = user_list()    
     if error := check_object(user_id, users_db.users_data):
         return error
@@ -84,10 +87,10 @@ def update_user_info(event=None, context=None):
         return make_response(error[0], error[1])  
 
     update_params = event['body']
-    if error := check_param(event['path'], 'id'):
+    if error := check_param(event['path'], 'user_id'):
         return make_response(error[0], error[1])  
 
-    user_id = event['path']['id']
+    user_id = event['path']['user_id']
     users_db = user_list()
     users_data  = users_db.users_data    
 
@@ -190,19 +193,12 @@ if __name__ == "__main__":
         'age': [3,2,1],
         'gender': [1,2,1]
     }
-    y = {
-        'name': [4,4],
-        'age': [1,2],
+    y = {'name': 2}
 
-    }
 
-    '''
-    header:{
-        unique_value{
-
-        }
-    }
-    '''
+    for key, value in y.items():
+        print(key,value)
+        mask = x['name']==2
     df = pd.DataFrame(x)
     headers = ['df.columns']
     print(headers)
