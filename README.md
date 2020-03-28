@@ -33,7 +33,7 @@ sls deploy
 # Endpoints
 
 ## Users data
-**GET     /users
+**GET     /users**
 ```
 Description: List all users(drivers) who pass throgh a terminal
 QueryString:
@@ -45,9 +45,8 @@ type: char
 type: bool
 -licence: Driver's licence (CNH) category. As for Brazilian standards, they go from "a" to "e"
 type: char
-Example output:
 ```
-**POST    /users
+**POST    /users**
 ```
 Description: Creates a new user
 Parameters:
@@ -56,7 +55,7 @@ type: body
 Example output:
 ```
 
-**GET     /users/{user_id}
+**GET     /users/{user_id}**
 ```
 Description: Get the data from a specific user
 Parameters:
@@ -64,7 +63,7 @@ Parameters:
 type: int
 ```
 
-**PUT     /users/{user_id}
+**PUT     /users/{user_id}**
 ```
 Description: Update(changes) the data from a specific user
 Parameters:
@@ -77,7 +76,7 @@ type: body
 ## Terminals data
 
 
-**GET     /terminals/{terminal_id}
+**GET     /terminals/{terminal_id}**
 ```
 Parameters:
 -terminal_id(required): Id of user.
@@ -93,14 +92,14 @@ type: string
 type: bool
 ```
 
-**POST    /terminals/{terminal_id}
+**POST    /terminals/{terminal_id}**
 ```
 Parameters:
 -terminal_id(required): Id of user.
 type: int
 QueryString:
 -name: Name of user
-```
 type: string
+```
 
 # File Structure
