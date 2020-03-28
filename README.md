@@ -1,10 +1,14 @@
 # truck-api
+```
 This is a sample of an serverless service hosted by AWS.
 In this project, we aim to keep track of truck drivers which come and go from terminals.
+```
 
 
 # Installation
-This requires a AWS account
+```
+This project requires an AWS account and python 3.8 or newer
+```
 
 ## Serverless
 
@@ -24,14 +28,15 @@ sudo npm install -g serverless-python-requirements serverless-dotenv-plugin
 pip -r install requirements.txt
 ```
 
-# AWS Deploy
+# AWS Deployment
 ```
-add aws account info
+serverless config credentials --provider aws --key AWS_KEY --secret AWS_SECRET
 sls deploy
 ```
 
 # Endpoints
-
+I've set up a demo that can be used in the next 2 weeks just in case: \n
+[https://j0tg1td581.execute-api.us-east-1.amazonaws.com/dev]
 ## Users data
 **GET     /users**
 ```
@@ -52,7 +57,6 @@ Description: Creates a new user
 Parameters:
 -body(required): Dictionary containing all the user information (name, gender, age, ownVehicle, licence)
 type: body
-Example output:
 ```
 
 **GET     /users/{user_id}**
@@ -102,4 +106,11 @@ QueryString:
 type: string
 ```
 
-# File Structure
+# Database Structure
+S3_BUCKET
+└───users
+|   └───user_list.json
+└───terminals
+    └───<id>
+        └───Datalake_Structure(%Y/%m)
+            └─── terminal_<id>_%Y%m%d.json
