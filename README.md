@@ -35,8 +35,10 @@ sls deploy
 ```
 
 # Endpoints
-I've set up a demo that can be used in the next 2 weeks just in case: \n
-[https://j0tg1td581.execute-api.us-east-1.amazonaws.com/dev]
+```
+I've set up a demo that can be used in the next 2 weeks just in case:
+https://j0tg1td581.execute-api.us-east-1.amazonaws.com/dev
+```
 ## Users data
 **GET     /users**
 ```
