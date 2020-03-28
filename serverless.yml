@@ -51,7 +51,6 @@ functions:
           path: users/
           method: get
           request:
-          parameters:
             queryParams:
             - name: "gender"
               description: "Gender"
@@ -73,10 +72,6 @@ functions:
       - http:
           path: users/{user_id}
           method: get
-          request: 
-            parameters: 
-              paths: 
-                user_id: true
 
   update_user_info:
     handler: handler.update_user_info
@@ -84,10 +79,6 @@ functions:
       - http:
           path: users/{user_id}
           method: put
-          request: 
-            parameters: 
-              paths: 
-                user_id: true
 
   get_terminal_info:
     handler: handler.get_terminal_info
@@ -96,9 +87,6 @@ functions:
           path: terminals/{terminal_id}
           method: get
           request: 
-            parameters: 
-              paths: 
-                terminal_id: true
             queryParams:
             - name: "ini_date"
               description: "Initial date"
@@ -113,12 +101,8 @@ functions:
     handler: handler.add_terminal_traffic
     events:
       - http:
-          path: terminals/{user_id}
+          path: terminals/{terminal_id}
           method: post
-          request: 
-            parameters: 
-              paths: 
-                user_id: true
 
   get_terminal_users:
     handler: handler.get_terminal_users
@@ -127,9 +111,6 @@ functions:
           path: terminals/{terminal_id}/users
           method: get
           request: 
-            parameters: 
-              paths: 
-                terminal_id: true
             queryParams:
             - name: "ini_date"
               description: "Initial date"
@@ -137,5 +118,3 @@ functions:
               description: "Final date"
             - name: "ownVehicle"
               description: "Is the Vahicle owned by the user"
-            - name: "groupByVehicle"
-              description: "Group result by type of vehicle"

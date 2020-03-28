@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 
 BUCKETNAME = f"{os.environ.get('S3_BUCKET')}-{os.environ.get('STAGE_NAME')}"
-BUCKETNAME = 'lucascantosbucket'
 
 def data_lake_name(timestamp=None):
     ''' padronização de nomemclatura para o data lake de images e dados '''

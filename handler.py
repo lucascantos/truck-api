@@ -18,7 +18,7 @@ def get_users(event=None, context=None):
     if check_param(event, 'queryStringParameters'):
         filter_params = event['queryStringParameters']
         body['users'] = users_db.filter_users(filter_params)
-    make_response(200, body)
+    return make_response(200, body)
 
 
 def add_user(event=None, context=None):
@@ -29,7 +29,7 @@ def add_user(event=None, context=None):
     Save users back to s3
     201
     '''
-    user_params = ['name', 'age', 'gender', 'ownAuto', 'licence', 'vehicleType']
+    user_params = ['name', 'age', 'gender', 'ownAuto', 'licence']
 
     if error := check_param(event, 'body'):
         return make_response(error[0], error[1])  
@@ -37,7 +37,8 @@ def add_user(event=None, context=None):
     for param in user_params:        
         if error := check_param(event['body'], param):
             return make_response(error[0], error[1])  
-          
+    
+    print(event['body'])
     new_user_params = json.loads(event['body'])
 
     users_db = user_list()
@@ -259,19 +260,5 @@ def hello(event, context):
     }
     """
 
-def sns_send_inputs(event=None, context=None):
-    if check_param(event):
-        return check_param(event)    
-
-    report_param = event['queryStringParameters']['report']
-    form_inputs = json.loads(event['body'])
-
-    parsed_inputs = list(form_inputs.items())
-    response = {
-        'statusCode': 200,
-        'body': 'Request sent to server'
-    }
-    sns.send(json.dumps(parsed_inputs), report_param)
-    return response
 
     

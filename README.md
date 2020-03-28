@@ -14,6 +14,10 @@ serverless
 npm init
 sudo npm install -g serverless-python-requirements serverless-dotenv-plugin
 
-## Packages
+## Python Packages
 
 pip -r install requirements.txt
+
+# AWS Deploy
+add aws account info
+sls deploy
