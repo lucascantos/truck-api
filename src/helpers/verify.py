@@ -11,15 +11,20 @@ def check_file(file_url):
     return buffer_data
 
 def check_param(event, required_params):
-    response = None           
-    if not required_params in event:
-        response = f"{required_params} parameter not found"
+    response = None          
+    
+    if not required_params in event:        
+        response = f"{required_params} parameter not found" 
+    elif not event[required_params]:
+        response = f"{required_params} parameter not found" 
 
     if response:
         return (400, response)
+    return response
 
 def check_object(object_id, object_data):
-    if object_id > len(object_data[0]):
+    first_key = list(object_data.keys())[0]
+    if object_id > len(object_data[first_key]):
         return make_response(404, 'Not found')
     return
 

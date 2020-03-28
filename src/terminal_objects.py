@@ -32,7 +32,7 @@ class terminal_traffic(object):
         for param in traffic_params:
             self.terminal_data['traffic'][param] = []
         
-        for date in pd.daterange(self.ini_date, self.end_date):
+        for date in pd.date_range(self.ini_date, self.end_date):
             self._load_data(date)
         self.terminal_df = pd.DataFrame(self.terminal_data['traffic'])
 

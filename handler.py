@@ -14,12 +14,13 @@ def get_users(event=None, context=None):
     200
     '''
     users_db = user_list()
-    body = users_db.users_data
     print(event)
     if not check_param(event, 'queryStringParameters'):
         filter_params = event['queryStringParameters']
         print(filter_params)
-        body['users'] = users_db.filter_users(filter_params)
+        users_db.users_data = users_db.filter_users(filter_params)
+    
+    body = users_db.data
     return make_response(200, body)
 
 
@@ -36,12 +37,13 @@ def add_user(event=None, context=None):
     if error := check_param(event, 'body'):
         return make_response(error[0], error[1])  
 
+    new_user_params = json.loads(event['body'])
+
     for param in user_params:        
-        if error := check_param(event['body'], param):
+        if error := check_param(new_user_params, param):
             return make_response(error[0], error[1])  
     
-    print(event['body'])
-    new_user_params = json.loads(event['body'])
+   
 
     users_db = user_list()
     users_db.add_user(new_user_params)
@@ -58,16 +60,18 @@ def get_user_info(event=None, context=None):
     return json of data
     200
     '''
-    print(event)
-    if error := check_param(event['path'], 'user_id'):
+    if error := check_param(event['pathParameters'], 'user_id'):
         return make_response(error[0], error[1])  
-    
-    user_id = event['path']['user_id']
+    try:
+        user_id = int(event['pathParameters']['user_id'])
+    except:
+        return (make_response(400, 'Id must be interger'))
+
     users_db = user_list()    
     if error := check_object(user_id, users_db.users_data):
         return error
         
-    user_info = users_db.get_users(user_id)
+    user_info = users_db.get_users([user_id])
 
     return make_response(200, user_info)
 
@@ -86,19 +90,25 @@ def update_user_info(event=None, context=None):
     if error := check_param(event, 'body'):
         return make_response(error[0], error[1])  
 
-    update_params = event['body']
-    if error := check_param(event['path'], 'user_id'):
+    update_params = json.loads(event['body'])
+    if error := check_param(event['pathParameters'], 'user_id'):
         return make_response(error[0], error[1])  
 
-    user_id = event['path']['user_id']
+    try:
+        user_id = int(event['pathParameters']['user_id'])
+    except:
+        return (make_response(400, 'Id must be interger'))
+        
     users_db = user_list()
     users_data  = users_db.users_data    
 
     if error := check_object(user_id, users_data):
         return error
 
-    for key in users_data.keys():
-        if key in update_params:
+    for key in update_params.keys():
+        if key in users_data.keys():
+            print(key)
+            print(type(user_id), user_id)
             users_data[key][user_id] = update_params[key]
 
     users_db.save_users()
@@ -108,19 +118,26 @@ def update_user_info(event=None, context=None):
 def get_terminal_info(event=None, context=None):
     allowed_params=['loaded']
 
-    if error := check_param(event['path'], 'terminal_id'):
+    if error := check_param(event['pathParameters'], 'terminal_id'):
         return make_response(error[0], error[1])  
-    terminal_id = event['path']['terminal_id']
+    try:
+        terminal_id = int(event['pathParameters']['terminal_id'])
+    except:
+        return (make_response(400, 'Id must be interger'))
+
     # if error := check_object(user_id, terminal_list().terminal_id):
     #     return error
     if terminal_id != 0:
         return make_response(404, 'Not Found') 
         
-    if check_param(event, 'queryStringParameters'):
+    if not check_param(event, 'queryStringParameters'):
         filter_params = event['queryStringParameters']
-        if not ('ini_date' or 'end_date'):
-            filter_params['ini_date'] = None
-            filter_params['end_date'] = None 
+    else:
+        filter_params = {}
+
+    if not ('ini_date' or 'end_date') in filter_params:
+        filter_params['ini_date'] = None
+        filter_params['end_date'] = None 
         
     traffic_db = terminal_traffic(terminal_id, filter_params['ini_date'], filter_params['end_date'])
     filter_params.pop('ini_date')
@@ -146,14 +163,20 @@ def add_terminal_traffic(event=None, context=None):
 
     if error := check_param(event, 'body'):
         return make_response(error[0], error[1])  
+    new_traffic_params = json.loads(event['body'])
 
     for param in traffic_params:        
-        if error := check_param(event['body'], param):
+        if error := check_param(new_traffic_params, param):
             return make_response(error[0], error[1])  
     
-    if error := check_param(event['path'], 'terminal_id'):
+    if error := check_param(event['pathParameters'], 'terminal_id'):
         return make_response(error[0], error[1])  
-    terminal_id = event['path']['terminal_id']
+
+    try:
+        terminal_id = int(event['pathParameters']['terminal_id'])
+    except:
+        return (make_response(400, 'Id must be interger'))
+
     if terminal_id != 0:
         return make_response(404, 'Not Found')
           
@@ -167,8 +190,13 @@ def add_terminal_traffic(event=None, context=None):
 def get_terminal_users(event=None, context=None):
 
     if error := check_param(event['path'], 'terminal_id'):
-        return make_response(error[0], error[1])  
-    terminal_id = event['path']['terminal_id']
+        return make_response(error[0], error[1]) 
+
+    try:
+        terminal_id = int(event['pathParameters']['terminal_id'])
+    except:
+        return (make_response(400, 'Id must be interger'))
+
     if terminal_id != 0:
         return make_response(404, 'Not Found')
     
@@ -182,57 +210,6 @@ def get_terminal_users(event=None, context=None):
     pass
 
 
-
-if __name__ == "__main__":
-    import numpy as np
-    import pandas as pd
-    from datetime import datetime
-    from dateutil.relativedelta import relativedelta
-    x = {
-        'name': [1,2,3],
-        'age': [3,2,1],
-        'gender': [1,2,1]
-    }
-    y = {'name': 2}
-
-
-    for key, value in y.items():
-        print(key,value)
-        mask = x['name']==2
-    df = pd.DataFrame(x)
-    headers = ['df.columns']
-    print(headers)
-    if isinstance(headers, (list, object)):
-        if headers in df.columns:
-
-            print('nice')
-    print(df[headers].to_dict(orient='list'))
-
-    # print(x.to_dict(orient='list'))
-    # y = np.array(x['name'])
-    # print(y[[0,1]])
-    # new_guy={
-    #     'name': 9,
-    #     'age': 0
-    # }
-    # x = x.append(new_guy, ignore_index=True)
-    # print(x)
-    # filters = {
-    #     'name': 2,
-    #     'age': 2
-    # }
-    # y = x
-    # for k, v in filters.items():
-    #     f = y[k]>=v
-    #     y = y[f]
-    #     print(y)
-    
-    # print(json.loads(x))
-
-    # x = user_list()
-    # print(x.users_data)
-    # x.save_users()
-    pass
 
 def hello(event, context):
     body = {
