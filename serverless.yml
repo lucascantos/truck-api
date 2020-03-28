@@ -100,8 +100,25 @@ functions:
               paths: 
                 terminal_id: true
             queryParams:
+            - name: "ini_date"
+              description: "Initial date"
+            - name: "end_date"
+              description: "Final date"
+            - name: "loaded"
+              description: "Is the truck loaded"
             - name: "groupByVehicle"
               description: "The type of vehicle"
+
+  add_terminal_traffic:
+    handler: handler.add_terminal_traffic
+    events:
+      - http:
+          path: terminals/{user_id}
+          method: post
+          request: 
+            parameters: 
+              paths: 
+                user_id: true
 
   get_terminal_users:
     handler: handler.get_terminal_users
@@ -118,8 +135,6 @@ functions:
               description: "Initial date"
             - name: "end_date"
               description: "Final date"
-            - name: "loaded"
-              description: "Is the truck loaded"
             - name: "ownVehicle"
               description: "Is the Vahicle owned by the user"
             - name: "groupByVehicle"

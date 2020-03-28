@@ -39,7 +39,6 @@ def add_user(event=None, context=None):
             return make_response(error[0], error[1])  
           
     new_user_params = json.loads(event['body'])
-    new_user_params['status'] = 0
 
     users_db = user_list()
     users_db.add_user(new_user_params)
@@ -103,32 +102,32 @@ def update_user_info(event=None, context=None):
 
 
 def get_terminal_info(event=None, context=None):
-    allowed_params = ['groupByVehicle']
-    if error := check_param(event['path'], 'id'):
-        return make_response(error[0], error[1])  
-    
-    if check_param(event, 'queryStringParameters'):
-        filter_params = event['queryStringParameters']
-        if not ('ini_date' or 'end_date'):
-            filter_params['ini_date'] = None
-            filter_params['end_date'] = None
+    allowed_params=['loaded']
 
+    if error := check_param(event['path'], 'terminal_id'):
+        return make_response(error[0], error[1])  
     terminal_id = event['path']['terminal_id']
     # if error := check_object(user_id, terminal_list().terminal_id):
     #     return error
     if terminal_id != 0:
-        return make_response(404, 'Not Found')  
+        return make_response(404, 'Not Found') 
+        
+    if check_param(event, 'queryStringParameters'):
+        filter_params = event['queryStringParameters']
+        if not ('ini_date' or 'end_date'):
+            filter_params['ini_date'] = None
+            filter_params['end_date'] = None 
         
     traffic_db = terminal_traffic(terminal_id, filter_params['ini_date'], filter_params['end_date'])
     filter_params.pop('ini_date')
     filter_params.pop('end_date')
 
+    body = traffic_db.terminal_data
     if len(filter_params) > 0:
-        if filter_params['groupByVehicle']:
+        if 'groupByVehicle' in filter_params:
             body = traffic_db.group_data('vehicleType', traffic_db.terminal_data['meta']['vehicleType'])
-    else:
-        body = traffic_db.terminal_data
-
+        else:
+            body['traffic'] = traffic_db.filter_data(filter_params)
     return make_response(200, body)  
 
     '''
@@ -138,8 +137,44 @@ def get_terminal_info(event=None, context=None):
     return json of data
     200
     '''
+def add_terminal_traffic(event=None, context=None):    
+    traffic_params = ['user', 'origin', 'destination', 'loaded', 'vehicleType']
+
+    if error := check_param(event, 'body'):
+        return make_response(error[0], error[1])  
+
+    for param in traffic_params:        
+        if error := check_param(event['body'], param):
+            return make_response(error[0], error[1])  
+    
+    if error := check_param(event['path'], 'terminal_id'):
+        return make_response(error[0], error[1])  
+    terminal_id = event['path']['terminal_id']
+    if terminal_id != 0:
+        return make_response(404, 'Not Found')
+          
+    new_traffic_params = json.loads(event['body'])
+    traffic_db = terminal_traffic(terminal_id, None, None)
+    traffic_db.add_data(new_traffic_params)
+    traffic_db.save_data()
+
+    return make_response(201, f'New traffic added: {new_traffic_params["name"]}')
 
 def get_terminal_users(event=None, context=None):
+
+    if error := check_param(event['path'], 'terminal_id'):
+        return make_response(error[0], error[1])  
+    terminal_id = event['path']['terminal_id']
+    if terminal_id != 0:
+        return make_response(404, 'Not Found')
+    
+    if check_param(event, 'queryStringParameters'):
+        filter_params = event['queryStringParameters']
+        if not ('ini_date' or 'end_date'):
+            filter_params['ini_date'] = None
+            filter_params['end_date'] = None 
+
+    traffic_db = terminal_traffic(terminal_id, filter_params['ini_date'], filter_params['end_date'])
     pass
 
 
@@ -172,6 +207,7 @@ if __name__ == "__main__":
     print(headers)
     if isinstance(headers, (list, object)):
         if headers in df.columns:
+
             print('nice')
     print(df[headers].to_dict(orient='list'))
 

@@ -64,7 +64,7 @@ class terminal_traffic(object):
 
     def group_data(self, header, unique_values=None):
         if not unique_values:
-            self._get_unique(header)
+            unique_values = self._get_unique(header)
 
         grouped_data = self.terminal_data
         grouped_data.pop(['traffic'])
@@ -74,10 +74,8 @@ class terminal_traffic(object):
             grouped_data[header][value] = masked_data
         return grouped_data
 
-
     def _get_unique(self, header):
         return self.terminal_df[header].uniques
-
         
 class terminal_list(object):
     def __init__(self):
