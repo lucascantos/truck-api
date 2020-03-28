@@ -109,6 +109,7 @@ type: string
 ```
 
 # Database Structure
+```
 S3_BUCKET
 └───users
 |   └───user_list.json
@@ -116,3 +117,4 @@ S3_BUCKET
     └───<id>
         └───Datalake_Structure(%Y/%m)
             └─── terminal_<id>_%Y%m%d.json
+```
