@@ -184,26 +184,4 @@ def add_terminal_traffic(event=None, context=None):
 
     return make_response(201, f'New traffic added: {new_traffic_params["timestamp"]}')
 
-def get_terminal_users(event=None, context=None):
-
-    if error := check_param(event['path'], 'terminal_id'):
-        return make_response(error[0], error[1]) 
-
-    try:
-        terminal_id = int(event['pathParameters']['terminal_id'])
-    except:
-        return (make_response(400, 'Id must be interger'))
-
-    if terminal_id != 0:
-        return make_response(404, 'Not Found')
-    
-    if check_param(event, 'queryStringParameters'):
-        filter_params = event['queryStringParameters']
-        if not ('ini_date' or 'end_date'):
-            filter_params['ini_date'] = None
-            filter_params['end_date'] = None 
-
-    traffic_db = terminal_traffic(terminal_id, filter_params['ini_date'], filter_params['end_date'])
-    pass
-
     

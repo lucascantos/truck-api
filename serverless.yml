@@ -105,18 +105,3 @@ functions:
       - http:
           path: terminals/{terminal_id}
           method: post
-
-  get_terminal_users:
-    handler: handler.get_terminal_users
-    events:
-      - http:
-          path: terminals/{terminal_id}/users
-          method: get
-          request: 
-            queryParams:
-            - name: "ini_date"
-              description: "Initial date"
-            - name: "end_date"
-              description: "Final date"
-            - name: "ownVehicle"
-              description: "Is the Vahicle owned by the user"
