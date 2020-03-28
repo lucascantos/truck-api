@@ -143,21 +143,17 @@ def get_terminal_info(event=None, context=None):
     filter_params.pop('ini_date')
     filter_params.pop('end_date')
 
-    body = traffic_db.terminal_data
     if len(filter_params) > 0:
-        if 'groupByVehicle' in filter_params:
-            body = traffic_db.group_data('vehicleType', traffic_db.terminal_data['meta']['vehicleType'])
-        else:
-            body['traffic'] = traffic_db.filter_data(filter_params)
+        if 'groupByVehicle' in filter_params and filter_params['groupByVehicle']:
+            traffic_db.group_data('vehicleType', range(len(traffic_db.data['meta']['vehicleType'])))
+        elif filter_params['loaded']:
+            traffic_db.terminal_data = traffic_db.filter_data(filter_params)
+
+    body = traffic_db.data
     return make_response(200, body)  
 
-    '''
-    load terminals on pandas
-    check if terminal exists 404
-    get terminal data
-    return json of data
-    200
-    '''
+
+
 def add_terminal_traffic(event=None, context=None):    
     traffic_params = ['user', 'origin', 'destination', 'loaded', 'vehicleType']
 
@@ -184,8 +180,9 @@ def add_terminal_traffic(event=None, context=None):
     traffic_db = terminal_traffic(terminal_id, None, None)
     traffic_db.add_data(new_traffic_params)
     traffic_db.save_data()
+    print(traffic_db)
 
-    return make_response(201, f'New traffic added: {new_traffic_params["name"]}')
+    return make_response(201, f'New traffic added: {new_traffic_params["timestamp"]}')
 
 def get_terminal_users(event=None, context=None):
 
@@ -208,30 +205,5 @@ def get_terminal_users(event=None, context=None):
 
     traffic_db = terminal_traffic(terminal_id, filter_params['ini_date'], filter_params['end_date'])
     pass
-
-
-
-def hello(event, context):
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
-    }
-
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
-
 
     

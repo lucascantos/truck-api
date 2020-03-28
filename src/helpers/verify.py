@@ -6,7 +6,7 @@ def check_file(file_url):
     try:
         buffer_data = s3.s3_download(file_url)
     except:
-        print('Error')
+        print('File not found')
         return None
     return buffer_data
 
@@ -15,8 +15,8 @@ def check_param(event, required_params):
     
     if not required_params in event:        
         response = f"{required_params} parameter not found" 
-    elif not event[required_params]:
-        response = f"{required_params} parameter not found" 
+    elif event[required_params] is None:
+        response = f"Null parameter: {required_params}" 
 
     if response:
         return (400, response)
