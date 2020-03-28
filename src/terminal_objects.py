@@ -106,11 +106,4 @@ class terminal_list(object):
     
     def filter_terminals(self, mask_list):
         pass
-        # filtered_df = self.users_df
-        # for key, value in masks.items():
-        #     mask = self.users_df[key == value]
-        #     masked_df = filtered_df[mask]
-        #     if masked_df.size==0:
-        #         break
-        # return masked_df.to_dict(orient='list')
     

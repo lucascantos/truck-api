@@ -51,7 +51,11 @@ class user_list(object):
     def data(self):
         return {
             'users': self.users_data,
-            'meta': {}
+            'meta': {
+                "WARNING": "THIS META IS NOT YET IMPLEMENTED",
+                "gender": ['male', 'female'],
+                "licence": ['a', 'b', 'c', 'd', 'e']
+            }
         }
     
             

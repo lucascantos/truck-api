@@ -52,6 +52,8 @@ functions:
           method: get
           request:
             queryParams:
+            - name: "name"
+              description: "name"
             - name: "gender"
               description: "Gender"
             - name: "ownVehicle"
