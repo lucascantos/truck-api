@@ -7,36 +7,59 @@ In this project, we aim to keep track of truck drivers which come and go from te
 
 # Installation
 ```
-This project requires an AWS account and python 3.8 or newer
+This project requires an AWS account and python 3.8 or newer to work.
 ```
 
 ## Serverless
-
 ```
-sudo apt-get install npm
+First, Download and Install NPM which will manage our serverless instance.
+Then, run serverless and follow the instruction to create the basic configuration files.
+More on: 
+```
+```
+sudo apt-get install npm 
 npm install serverless
 serverless
 ```
 
 ### Plugins
 ```
+This applications require some plugins in order to work. 
+First we initiate NPM to make a 'package' file whick will manage the plugins of our serverless application
+Then, install the 'requirements' and 'dotenv' plugins. These will tell the Cloudformation the Python requirements and
+Enviroment Variables needed to be loaded.
+```
+```
 npm init
 sudo npm install -g serverless-python-requirements serverless-dotenv-plugin
 ```
 ## Python Packages
+```
+This application will copy the requirements installed in the current enviroment to the project.
+So, we must install all the requirements written on the file.
+```
 ```
 pip -r install requirements.txt
 ```
 
 # AWS Deployment
 ```
+In order to deploy the project on AWS, you must have an account and have a AWS Key and Secret with the correct permissions.
+With this in hand, adde your keys to the configuration.
+Then you are ready to deploy.
+```
+```
 serverless config credentials --provider aws --key AWS_KEY --secret AWS_SECRET
 sls deploy
 ```
 
+```
+This will make a CloudFormation containing all the project assets such as Lambda, S3, API Gateway, etc
+```
+
 # Endpoints
 ```
-I've set up a demo that can be used in the next 2 weeks just in case:
+I've set up a demo that can be accessed for the next 2 weeks:
 https://j0tg1td581.execute-api.us-east-1.amazonaws.com/dev
 ```
 ## Users data
@@ -84,28 +107,27 @@ type: body
 
 **GET     /terminals/{terminal_id}**
 ```
+Description: List all traffic of incomming drivers. Without time query, it return the last day data
 Parameters:
 -terminal_id(required): Id of user.
 type: int
 QueryString:
--ini_date
+-ini_date: Initial date for query. format: "%Y-%m-%d %H:%M"
 type: string
--end_date
+-end_date: Final date for query.format: "%Y-%m-%d %H:%M"
 type: string
--loaded: Name of user
-type: string
--groupByVehicle
+-loaded: If True, return only users with loaded trucks. False return all data
+type: bool
+-groupByVehicle: If True,return all traffic grouped by type of Vehicle.  False return all data
 type: bool
 ```
 
 **POST    /terminals/{terminal_id}**
 ```
+Description: Adds a new traffic info.
 Parameters:
--terminal_id(required): Id of user.
-type: int
-QueryString:
--name: Name of user
-type: string
+-body(required): Dictionary containing all the traffic information (user_id, origin, destination, loaded, vehicle)
+type: body
 ```
 
 # Database Structure
