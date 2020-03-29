@@ -44,8 +44,8 @@ pip -r install requirements.txt
 
 # AWS Deployment
 ```
-In order to deploy the project on AWS, you must have an account and have a AWS Key and Secret with the correct permissions.
-With this in hand, adde your keys to the configuration.
+In order to deploy the project on AWS, you must have an account and have a AWS Key and Secret.
+With this in hand, add your keys to the configuration.
 Then you are ready to deploy.
 ```
 ```
