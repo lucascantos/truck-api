@@ -42,7 +42,7 @@ https://j0tg1td581.execute-api.us-east-1.amazonaws.com/dev
 ## Users data
 **GET     /users**
 ```
-Description: List all users(drivers) who pass throgh a terminal
+Description: List all users(drivers) who pass through a terminal
 QueryString:
 -name: Name of user
 type: string
