@@ -14,11 +14,13 @@ This project requires an AWS account and python 3.8 or newer to work.
 ```
 First, Download and Install NPM which will manage our serverless instance.
 Then, run serverless and follow the instruction to create the basic configuration files.
-More on: 
+In order to deploy the project on AWS, you must have an account and have a AWS Key and Secret.
+With this in hand, add your keys to the configuration.
 ```
 ```
 sudo apt-get install npm 
-npm install serverless
+sudo npm install -g serverless
+serverless config credentials --provider aws --key AWS_KEY --secret AWS_SECRET
 serverless
 ```
 
@@ -44,8 +46,6 @@ pip -r install requirements.txt
 
 # AWS Deployment
 ```
-In order to deploy the project on AWS, you must have an account and have a AWS Key and Secret.
-With this in hand, add your keys to the configuration.
 Then you are ready to deploy.
 ```
 ```
