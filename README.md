@@ -111,6 +111,7 @@ type: int
 -body(required): Dictionary containing one or more user information (name, gender, age, ownVehicle, licence)
 type: body
 
+ExpampleInput:
 body = {
 "name": "Bob",
 }
@@ -145,6 +146,7 @@ Parameters:
 -body(required): Dictionary containing all the traffic information (user_id, origin, destination, loaded, vehicle)
 type: body
 
+ExpampleInput:
 body = {
 "user_id": 0,
 "origin": [-23,-44],
