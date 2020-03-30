@@ -118,7 +118,8 @@ body = {
 
 ## Terminals data
 ```
-This example does not account for managing terminals. Therefore, it only accepts the terminal_id 0, but it can be easelly expanded if needed. 
+This example does not account for managing terminals. 
+Therefore, it only accepts the terminal_id 0, but it can be easelly expanded if needed. 
 ```
 **GET     /terminals/{terminal_id}**
 ```
