@@ -75,6 +75,7 @@ type: char
 type: bool
 -licence: Driver's licence (CNH) category. As for Brazilian standards, they go from "a" to "e"
 type: char
+
 ```
 **POST    /users**
 ```
@@ -82,6 +83,15 @@ Description: Creates a new user
 Parameters:
 -body(required): Dictionary containing all the user information (name, gender, age, ownVehicle, licence)
 type: body
+
+ExpampleInput:
+body = {
+"name": "John",
+"age": 32,
+"gender": "m",
+"ownVehicle": True,
+"licence": "e"
+}
 ```
 
 **GET     /users/{user_id}**
@@ -100,11 +110,16 @@ Parameters:
 type: int
 -body(required): Dictionary containing one or more user information (name, gender, age, ownVehicle, licence)
 type: body
+
+body = {
+"name": "Bob",
+}
 ```
 
 ## Terminals data
-
-
+```
+This example does not account for managing terminals. Therefore, it only accepts the terminal_id 0, but it can be easelly expanded if needed. 
+```
 **GET     /terminals/{terminal_id}**
 ```
 Description: List all traffic of incomming drivers. Without time query, it return the last day data
@@ -128,6 +143,14 @@ Description: Adds a new traffic info.
 Parameters:
 -body(required): Dictionary containing all the traffic information (user_id, origin, destination, loaded, vehicle)
 type: body
+
+body = {
+"user_id": 0,
+"origin": [-23,-44],
+"destination": [-5, -30],
+"loaded": True,
+"vehicle": 3
+}
 ```
 
 # Database Structure
