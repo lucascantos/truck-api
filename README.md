@@ -21,6 +21,8 @@ With this in hand, add your keys to the configuration.
 sudo apt-get install npm 
 sudo npm install -g serverless
 serverless config credentials --provider aws --key AWS_KEY --secret AWS_SECRET
+
+run serverless just to make sure everything is fine:
 serverless
 ```
 
@@ -32,7 +34,10 @@ Then, install the 'requirements' and 'dotenv' plugins. These will tell the Cloud
 Enviroment Variables needed to be loaded.
 ```
 ```
+In case there are no package file present, you can create one with: (Don't worry to much with the options. Justo press enter) 
 npm init
+
+Install the packages:
 sudo npm install -g serverless-python-requirements serverless-dotenv-plugin
 ```
 ## Python Packages
