@@ -46,7 +46,7 @@ This application will copy the requirements installed in the current enviroment 
 So, we must install all the requirements written on the file.
 ```
 ```
-pip -r install requirements.txt
+pip install -r requirements.txt
 ```
 
 # AWS Deployment
